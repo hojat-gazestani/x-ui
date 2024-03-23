@@ -16,16 +16,33 @@
 
 # 安装&升级
 
+
+# x-ui
+x-ui is a panel that supports multiple protocols and users for xray.
+
+# Features
+
+- System status monitoring
+- Supports multiple users and protocols, with web visualization
+- Supported protocols: vmess, vless, trojan, shadowsocks, dokodemo-door, socks, http
+- Supports configuring more transmission configurations
+- Traffic statistics, traffic limitation, expiration time limitation
+- Customizable xray configuration template
+- Supports accessing the panel via HTTPS (with own domain + SSL certificate)
+- Supports one-click SSL certificate application and automatic renewal
+- More advanced configuration options, see the panel for details
+
+# Installation & Upgrade
 ```
-bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
+bash <(curl -Ls https://raw.githubusercontent.com/hojat-gazestani/x-ui/master/install.sh)
 ```
 
-## 手动安装&升级
+## Manual Installation & Upgrade
+1. First, download the latest release from https://github.com/vaxilu/x-ui/releases. Generally, choose the amd64 architecture.
+2. Then upload this compressed package to the /root/ directory of your server and log in to the server using the root user.
 
-1. 首先从 https://github.com/vaxilu/x-ui/releases 下载最新的压缩包，一般选择 `amd64`架构
-2. 然后将这个压缩包上传到服务器的 `/root/`目录下，并使用 `root`用户登录服务器
+> If your server's CPU architecture is not amd64, replace amd64 in the command with the appropriate architecture.
 
-> 如果你的服务器 cpu 架构不是 `amd64`，自行将命令中的 `amd64`替换为其他架构
 
 ```
 cd /root/
@@ -40,17 +57,18 @@ systemctl enable x-ui
 systemctl restart x-ui
 ```
 
-## 使用docker安装
+## Installing with Docker
 
-> 此 docker 教程与 docker 镜像由[Chasing66](https://github.com/Chasing66)提供
+> This Docker tutorial and Docker image are provided by [Chasing66](https://github.com/Chasing66).
 
-1. 安装docker
+1. Install Docker
 
 ```shell
 curl -fsSL https://get.docker.com | sh
 ```
 
-2. 安装x-ui
+2. 
+Install x-ui
 
 ```shell
 mkdir x-ui && cd x-ui
@@ -61,83 +79,90 @@ docker run -itd --network=host \
     enwaiax/x-ui:latest
 ```
 
-> Build 自己的镜像
+> Build your own image
 
 ```shell
 docker build -t x-ui .
 ```
 
-## SSL证书申请
+## SSL Certificate Application
 
-> 此功能与教程由[FranzKafkaYu](https://github.com/FranzKafkaYu)提供
+> This feature and tutorial are provided by [FranzKafkaYu](https://github.com/FranzKafkaYu).
 
-脚本内置SSL证书申请功能，使用该脚本申请证书，需满足以下条件:
+The script includes SSL certificate application functionality. To use this script to apply for a certificate, the following conditions must be met:
 
-- 知晓Cloudflare 注册邮箱
-- 知晓Cloudflare Global API Key
-- 域名已通过cloudflare进行解析到当前服务器
+- Know the Cloudflare registered email.
+- Know the Cloudflare Global API Key.
+- The domain name has been resolved to the current server through Cloudflare.
 
-获取Cloudflare Global API Key的方法:
-    ![](media/bda84fbc2ede834deaba1c173a932223.png)
+Method to obtain Cloudflare Global API Key:
+￼   ![](media/bda84fbc2ede834deaba1c173a932223.png)
     ![](media/d13ffd6a73f938d1037d0708e31433bf.png)
+￼
 
-使用时只需输入 `域名`, `邮箱`, `API KEY`即可，示意图如下：
-        ![](media/2022-04-04_141259.png)
+When using it, simply enter the domain name, email, and API KEY. A schematic diagram is as follows:
+    ![](media/2022-04-04_141259.png)
+￼
 
-注意事项:
+Notes:
 
-- 该脚本使用DNS API进行证书申请
-- 默认使用Let'sEncrypt作为CA方
-- 证书安装目录为/root/cert目录
-- 本脚本申请证书均为泛域名证书
+- This script uses the DNS API for certificate application.
+- Let's Encrypt is used as the default CA.
+- The certificate installation directory is /root/cert.
 
-## Tg机器人使用（开发中，暂不可使用）
+Certificates applied for using this script are wildcard certificates.
 
-> 此功能与教程由[FranzKafkaYu](https://github.com/FranzKafkaYu)提供
+## Telegram Bot Usage (Under Development, Not Available Yet)
 
-X-UI支持通过Tg机器人实现每日流量通知，面板登录提醒等功能，使用Tg机器人，需要自行申请
-具体申请教程可以参考[博客链接](https://coderfan.net/how-to-use-telegram-bot-to-alarm-you-when-someone-login-into-your-vps.html)
-使用说明:在面板后台设置机器人相关参数，具体包括
+> This feature and tutorial are provided by [FranzKafkaYu](https://github.com/FranzKafkaYu).
 
-- Tg机器人Token
-- Tg机器人ChatId
-- Tg机器人周期运行时间，采用crontab语法  
+X-UI supports features such as daily traffic notifications and panel login reminders through Telegram bots. To use Telegram bots, you need to apply for one yourself. You can refer to the specific application tutorial in this [blog post](https://coderfan.net/how-to-use-telegram-bot-to-alarm-you-when-someone-login-into-your-vps.html)
+Instructions for use: Set up the bot-related parameters in the panel backend, including 
 
-参考语法：
-- 30 * * * * * //每一分的第30s进行通知
-- @hourly      //每小时通知
-- @daily       //每天通知（凌晨零点整）
-- @every 8h    //每8小时通知  
+- Telegram bot Token
+- Telegram bot Chat ID
+- Telegram bot periodic runtime, using crontab syntax
 
-TG通知内容：
-- 节点流量使用
-- 面板登录提醒
-- 节点到期提醒
-- 流量预警提醒  
+Reference syntax:
 
-更多功能规划中...
-## 建议系统
+- 30 * * * * * // Notify at 30 seconds of every minute
+- @hourly // Notify every hour
+- @daily // Notify every day (midnight)
+- @every 8h // Notify every 8 hours
+
+Telegram notification content:
+
+- Node traffic usage
+- Panel login reminder
+- Node expiration reminder
+- Traffic warning notification
+
+
+- More features are being planned...
+
+## Recommended Systems
 
 - CentOS 7+
 - Ubuntu 16+
 - Debian 8+
 
-# 常见问题
+# Common Questions
 
-## 从 v2-ui 迁移
+## Migrating from v2-ui
 
-首先在安装了 v2-ui 的服务器上安装最新版 x-ui，然后使用以下命令进行迁移，将迁移本机 v2-ui 的 `所有 inbound 账号数据`至 x-ui，`面板设置和用户名密码不会迁移`
+First, install the latest version of x-ui on the server where v2-ui is installed. Then, use the following command to migrate all inbound account data from v2-ui to x-ui. Note that panel settings and username/password will not be migrated.
 
-> 迁移成功后请 `关闭 v2-ui`并且 `重启 x-ui`，否则 v2-ui 的 inbound 会与 x-ui 的 inbound 会产生 `端口冲突`
+
+> After the migration is successful, please close v2-ui and restart x-ui, otherwise, there will be a port conflict between the inbound of v2-ui and x-ui.
 
 ```
 x-ui v2-ui
 ```
 
-## issue 关闭
+## "Close Issue"
 
-各种小白问题看得血压很高
+Seeing all kinds of newbie questions raises the blood pressure.
 
 ## Stargazers over time
 
-[![Stargazers over time](https://starchart.cc/vaxilu/x-ui.svg)](https://starchart.cc/vaxilu/x-ui)
+[![Stargazers over time](https://starchart.cc/hojat-gazestani/x-ui.svg)](https://starchart.cc/hojat-gazestani/x-ui)
